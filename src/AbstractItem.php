@@ -114,12 +114,7 @@ abstract class AbstractItem implements ValidationAware
      */
     public function getValidationData(): array
     {
-        $data = [];
-        if ($this->model instanceof Model) {
-            $data = array_merge($data, $this->model->toArray());
-        }
-
-        return array_merge($data, $this->set_data);
+        return array_merge($this->toArray(), $this->set_data);
     }
 
     /**
