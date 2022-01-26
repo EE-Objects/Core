@@ -3,8 +3,11 @@
 namespace EeObjects;
 
 use ExpressionEngine\Service\Model\Model;
+use ExpressionEngine\Service\Validation\ValidationAware;
+use ExpressionEngine\Service\Validation\Validator;
+use ExpressionEngine\Service\Validation\Result AS ValidateResult;
 
-abstract class AbstractItem
+abstract class AbstractItem implements ValidationAware
 {
     /**
      * The raw data available from the ExpressionEngine Model
@@ -24,6 +27,12 @@ abstract class AbstractItem
      * @var Model|null
      */
     protected $model = null;
+
+    /**
+     * The ExpressionEngine Validation Rules array
+     * @var array
+     */
+    protected $rules = [];
 
     /**
      * AbstractItem constructor.
@@ -99,4 +108,20 @@ abstract class AbstractItem
      * @return AbstractItem
      */
     abstract public function set(string $key, $value): AbstractItem;
+
+    /**
+     * @return array
+     */
+    public function getValidationData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidationRules(): array
+    {
+        return $this->rules;
+    }
 }
