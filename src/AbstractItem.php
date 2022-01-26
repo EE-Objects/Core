@@ -114,7 +114,12 @@ abstract class AbstractItem implements ValidationAware
      */
     public function getValidationData(): array
     {
-        return $this->data;
+        $data = [];
+        if ($this->model instanceof Model) {
+            $data = array_merge($data, $this->model->toArray());
+        }
+
+        return array_merge($data, $this->set_data);
     }
 
     /**
@@ -123,5 +128,26 @@ abstract class AbstractItem implements ValidationAware
     public function getValidationRules(): array
     {
         return $this->rules;
+    }
+
+    /**
+     * Validates the submitted data
+     * @param array $post_data
+     * @return ValidateResult
+     */
+    public function validate(array $post_data = []): ValidateResult
+    {
+        //return $this->getValidator()->validate($post_data);
+        $this->data = $post_data;
+        return $this->getValidator()->validate($this);
+    }
+
+    /**
+     * @return Validator
+     */
+    protected function getValidator(): Validator
+    {
+        $validator = ee('Validation')->make($this->rules);
+        return $validator;
     }
 }
